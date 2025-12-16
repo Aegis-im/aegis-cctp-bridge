@@ -1,0 +1,791 @@
+{
+  "version": "3.4",
+  "log": [
+    {
+      "contracts/EthCctpReceiveProxy.sol:EthCctpReceiveProxy": {
+        "src": "contracts/EthCctpReceiveProxy.sol:13",
+        "version": {
+          "withMetadata": "d923b1a1d44656a70fd8010637d1a660e2b3540663c0f07823fbe2dbfd96a2dd",
+          "withoutMetadata": "8e282be3b87f0a894b9dd0e86e9ade2ca834e82771f0824bbd2364af75a57f54",
+          "linkedWithoutMetadata": "8e282be3b87f0a894b9dd0e86e9ade2ca834e82771f0824bbd2364af75a57f54"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(address,address,address)",
+          "setAdmin(address)",
+          "setManager(address)",
+          "setTransferTo(address)",
+          "receiveMessageAndForward(address,address,bytes,bytes)",
+          "rescue_transfer(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "EthCctpReceiveProxy",
+            "src": "contracts/EthCctpReceiveProxy.sol:45"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "admin",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:14"
+            },
+            {
+              "label": "manager",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:15"
+            },
+            {
+              "label": "transferTo",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:16"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/EthCctpReceiveProxy.sol:IERC20": {
+        "src": "contracts/EthCctpReceiveProxy.sol:4",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "balanceOf(address)",
+          "transfer(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/EthCctpReceiveProxy.sol:IMessageTransmitter": {
+        "src": "contracts/EthCctpReceiveProxy.sol:9",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "receiveMessage(bytes,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockERC20.sol:MockERC20": {
+        "src": "contracts/mocks/MockERC20.sol:4",
+        "version": {
+          "withMetadata": "697ec9b5c7fe0819ab5c380f3626e149cdafbda0901c60f8823b752ce62dc24b",
+          "withoutMetadata": "2452eda8a300a58421c6e02c2dd2735461c1b9064fd16f364c0786ea3077c9cc",
+          "linkedWithoutMetadata": "2452eda8a300a58421c6e02c2dd2735461c1b9064fd16f364c0786ea3077c9cc"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(string,string,uint8)",
+          "mint(address,uint256)",
+          "transfer(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockERC20",
+            "src": "contracts/mocks/MockERC20.sol:13"
+          },
+          {
+            "kind": "state-variable-immutable",
+            "name": "decimals",
+            "src": "contracts/mocks/MockERC20.sol:7"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "name",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_string_storage",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:5"
+            },
+            {
+              "label": "symbol",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_string_storage",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:6"
+            },
+            {
+              "label": "balanceOf",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:9"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockMessageTransmitter.sol:IMintable": {
+        "src": "contracts/mocks/MockMessageTransmitter.sol:4",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "mint(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockMessageTransmitter.sol:MockMessageTransmitter": {
+        "src": "contracts/mocks/MockMessageTransmitter.sol:8",
+        "version": {
+          "withMetadata": "8bb1f3c40fac94b1d5d658c447e92c84c60105cdb40c1bd454c00ff018cf5097",
+          "withoutMetadata": "0e83acdae6833b2022c86964baac9070f62e937ccd6f76d31932ad66b33622e3",
+          "linkedWithoutMetadata": "0e83acdae6833b2022c86964baac9070f62e937ccd6f76d31932ad66b33622e3"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(address,address,uint256)",
+          "setRecipient(address)",
+          "setAmountToMint(uint256)",
+          "receiveMessage(bytes,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockMessageTransmitter",
+            "src": "contracts/mocks/MockMessageTransmitter.sol:13"
+          },
+          {
+            "kind": "state-variable-immutable",
+            "name": "token",
+            "src": "contracts/mocks/MockMessageTransmitter.sol:9"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "recipient",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "MockMessageTransmitter",
+              "src": "contracts/mocks/MockMessageTransmitter.sol:10"
+            },
+            {
+              "label": "amountToMint",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_uint256",
+              "contract": "MockMessageTransmitter",
+              "src": "contracts/mocks/MockMessageTransmitter.sol:11"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      }
+    },
+    {
+      "contracts/EthCctpReceiveProxy.sol:EthCctpReceiveProxy": {
+        "src": "contracts/EthCctpReceiveProxy.sol:13",
+        "version": {
+          "withMetadata": "d923b1a1d44656a70fd8010637d1a660e2b3540663c0f07823fbe2dbfd96a2dd",
+          "withoutMetadata": "8e282be3b87f0a894b9dd0e86e9ade2ca834e82771f0824bbd2364af75a57f54",
+          "linkedWithoutMetadata": "8e282be3b87f0a894b9dd0e86e9ade2ca834e82771f0824bbd2364af75a57f54"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(address,address,address)",
+          "setAdmin(address)",
+          "setManager(address)",
+          "setTransferTo(address)",
+          "receiveMessageAndForward(address,address,bytes,bytes)",
+          "rescue_transfer(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "EthCctpReceiveProxy",
+            "src": "contracts/EthCctpReceiveProxy.sol:45"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "admin",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:14"
+            },
+            {
+              "label": "manager",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:15"
+            },
+            {
+              "label": "transferTo",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:16"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/EthCctpReceiveProxy.sol:IERC20": {
+        "src": "contracts/EthCctpReceiveProxy.sol:4",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "balanceOf(address)",
+          "transfer(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/EthCctpReceiveProxy.sol:IMessageTransmitter": {
+        "src": "contracts/EthCctpReceiveProxy.sol:9",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "receiveMessage(bytes,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockERC20.sol:MockERC20": {
+        "src": "contracts/mocks/MockERC20.sol:4",
+        "version": {
+          "withMetadata": "697ec9b5c7fe0819ab5c380f3626e149cdafbda0901c60f8823b752ce62dc24b",
+          "withoutMetadata": "2452eda8a300a58421c6e02c2dd2735461c1b9064fd16f364c0786ea3077c9cc",
+          "linkedWithoutMetadata": "2452eda8a300a58421c6e02c2dd2735461c1b9064fd16f364c0786ea3077c9cc"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(string,string,uint8)",
+          "mint(address,uint256)",
+          "transfer(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockERC20",
+            "src": "contracts/mocks/MockERC20.sol:13"
+          },
+          {
+            "kind": "state-variable-immutable",
+            "name": "decimals",
+            "src": "contracts/mocks/MockERC20.sol:7"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "name",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_string_storage",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:5"
+            },
+            {
+              "label": "symbol",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_string_storage",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:6"
+            },
+            {
+              "label": "balanceOf",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:9"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockMessageTransmitter.sol:IMintable": {
+        "src": "contracts/mocks/MockMessageTransmitter.sol:4",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "mint(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockMessageTransmitter.sol:MockMessageTransmitter": {
+        "src": "contracts/mocks/MockMessageTransmitter.sol:8",
+        "version": {
+          "withMetadata": "8bb1f3c40fac94b1d5d658c447e92c84c60105cdb40c1bd454c00ff018cf5097",
+          "withoutMetadata": "0e83acdae6833b2022c86964baac9070f62e937ccd6f76d31932ad66b33622e3",
+          "linkedWithoutMetadata": "0e83acdae6833b2022c86964baac9070f62e937ccd6f76d31932ad66b33622e3"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(address,address,uint256)",
+          "setRecipient(address)",
+          "setAmountToMint(uint256)",
+          "receiveMessage(bytes,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockMessageTransmitter",
+            "src": "contracts/mocks/MockMessageTransmitter.sol:13"
+          },
+          {
+            "kind": "state-variable-immutable",
+            "name": "token",
+            "src": "contracts/mocks/MockMessageTransmitter.sol:9"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "recipient",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "MockMessageTransmitter",
+              "src": "contracts/mocks/MockMessageTransmitter.sol:10"
+            },
+            {
+              "label": "amountToMint",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_uint256",
+              "contract": "MockMessageTransmitter",
+              "src": "contracts/mocks/MockMessageTransmitter.sol:11"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      }
+    },
+    {
+      "contracts/EthCctpReceiveProxy.sol:EthCctpReceiveProxy": {
+        "src": "contracts/EthCctpReceiveProxy.sol:13",
+        "version": {
+          "withMetadata": "d923b1a1d44656a70fd8010637d1a660e2b3540663c0f07823fbe2dbfd96a2dd",
+          "withoutMetadata": "8e282be3b87f0a894b9dd0e86e9ade2ca834e82771f0824bbd2364af75a57f54",
+          "linkedWithoutMetadata": "8e282be3b87f0a894b9dd0e86e9ade2ca834e82771f0824bbd2364af75a57f54"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(address,address,address)",
+          "setAdmin(address)",
+          "setManager(address)",
+          "setTransferTo(address)",
+          "receiveMessageAndForward(address,address,bytes,bytes)",
+          "rescue_transfer(address,address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "EthCctpReceiveProxy",
+            "src": "contracts/EthCctpReceiveProxy.sol:45"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "admin",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:14"
+            },
+            {
+              "label": "manager",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:15"
+            },
+            {
+              "label": "transferTo",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_address",
+              "contract": "EthCctpReceiveProxy",
+              "src": "contracts/EthCctpReceiveProxy.sol:16"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/EthCctpReceiveProxy.sol:IERC20": {
+        "src": "contracts/EthCctpReceiveProxy.sol:4",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "balanceOf(address)",
+          "transfer(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/EthCctpReceiveProxy.sol:IMessageTransmitter": {
+        "src": "contracts/EthCctpReceiveProxy.sol:9",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "receiveMessage(bytes,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockERC20.sol:MockERC20": {
+        "src": "contracts/mocks/MockERC20.sol:4",
+        "version": {
+          "withMetadata": "697ec9b5c7fe0819ab5c380f3626e149cdafbda0901c60f8823b752ce62dc24b",
+          "withoutMetadata": "2452eda8a300a58421c6e02c2dd2735461c1b9064fd16f364c0786ea3077c9cc",
+          "linkedWithoutMetadata": "2452eda8a300a58421c6e02c2dd2735461c1b9064fd16f364c0786ea3077c9cc"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(string,string,uint8)",
+          "mint(address,uint256)",
+          "transfer(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockERC20",
+            "src": "contracts/mocks/MockERC20.sol:13"
+          },
+          {
+            "kind": "state-variable-immutable",
+            "name": "decimals",
+            "src": "contracts/mocks/MockERC20.sol:7"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "name",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_string_storage",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:5"
+            },
+            {
+              "label": "symbol",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_string_storage",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:6"
+            },
+            {
+              "label": "balanceOf",
+              "offset": 0,
+              "slot": "2",
+              "type": "t_mapping(t_address,t_uint256)",
+              "contract": "MockERC20",
+              "src": "contracts/mocks/MockERC20.sol:9"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_mapping(t_address,t_uint256)": {
+              "label": "mapping(address => uint256)",
+              "numberOfBytes": "32"
+            },
+            "t_string_storage": {
+              "label": "string",
+              "numberOfBytes": "32"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockMessageTransmitter.sol:IMintable": {
+        "src": "contracts/mocks/MockMessageTransmitter.sol:4",
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "mint(address,uint256)"
+        ],
+        "linkReferences": [],
+        "errors": [],
+        "layout": {
+          "storage": [],
+          "types": {},
+          "layoutVersion": "1.2",
+          "flat": false,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      },
+      "contracts/mocks/MockMessageTransmitter.sol:MockMessageTransmitter": {
+        "src": "contracts/mocks/MockMessageTransmitter.sol:8",
+        "version": {
+          "withMetadata": "8bb1f3c40fac94b1d5d658c447e92c84c60105cdb40c1bd454c00ff018cf5097",
+          "withoutMetadata": "0e83acdae6833b2022c86964baac9070f62e937ccd6f76d31932ad66b33622e3",
+          "linkedWithoutMetadata": "0e83acdae6833b2022c86964baac9070f62e937ccd6f76d31932ad66b33622e3"
+        },
+        "inherit": [],
+        "libraries": [],
+        "methods": [
+          "(address,address,uint256)",
+          "setRecipient(address)",
+          "setAmountToMint(uint256)",
+          "receiveMessage(bytes,bytes)"
+        ],
+        "linkReferences": [],
+        "errors": [
+          {
+            "kind": "constructor",
+            "contract": "MockMessageTransmitter",
+            "src": "contracts/mocks/MockMessageTransmitter.sol:13"
+          },
+          {
+            "kind": "state-variable-immutable",
+            "name": "token",
+            "src": "contracts/mocks/MockMessageTransmitter.sol:9"
+          }
+        ],
+        "layout": {
+          "storage": [
+            {
+              "label": "recipient",
+              "offset": 0,
+              "slot": "0",
+              "type": "t_address",
+              "contract": "MockMessageTransmitter",
+              "src": "contracts/mocks/MockMessageTransmitter.sol:10"
+            },
+            {
+              "label": "amountToMint",
+              "offset": 0,
+              "slot": "1",
+              "type": "t_uint256",
+              "contract": "MockMessageTransmitter",
+              "src": "contracts/mocks/MockMessageTransmitter.sol:11"
+            }
+          ],
+          "types": {
+            "t_address": {
+              "label": "address",
+              "numberOfBytes": "20"
+            },
+            "t_uint256": {
+              "label": "uint256",
+              "numberOfBytes": "32"
+            }
+          },
+          "layoutVersion": "1.2",
+          "flat": true,
+          "namespaces": {}
+        },
+        "solcVersion": "0.8.26"
+      }
+    }
+  ]
+}

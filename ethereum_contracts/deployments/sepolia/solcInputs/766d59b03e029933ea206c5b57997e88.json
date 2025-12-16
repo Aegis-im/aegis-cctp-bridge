@@ -1,0 +1,44 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/EthCctpReceiveProxy.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity 0.8.26;\n\ninterface IERC20 {\n    function balanceOf(address account) external view returns (uint256);\n    function transfer(address to, uint256 amount) external returns (bool);\n}\n\ninterface IMessageTransmitter {\n    function receiveMessage(bytes calldata message, bytes calldata attestation) external returns (bool);\n}\n\ncontract EthCctpReceiveProxy {\n    address public admin;\n    address public manager;\n    address public transferTo;\n\n    error NotAdmin();\n    error NotManagerOrAdmin();\n    error ZeroAddress();\n    error ReceiveMessageFailed();\n    error TokenTransferFailed();\n\n    event AdminUpdated(address indexed oldAdmin, address indexed newAdmin);\n    event ManagerUpdated(address indexed oldManager, address indexed newManager);\n    event TransferToUpdated(address indexed oldTransferTo, address indexed newTransferTo);\n    event MessageReceivedAndForwarded(\n        address indexed caller,\n        address indexed messageTransmitter,\n        address indexed token,\n        uint256 forwardedAmount\n    );\n    event RescueTransfer(address indexed token, address indexed to, uint256 amount);\n\n    modifier onlyAdmin() {\n        if (msg.sender != admin) revert NotAdmin();\n        _;\n    }\n\n    modifier onlyManagerOrAdmin() {\n        if (msg.sender != admin && msg.sender != manager) revert NotManagerOrAdmin();\n        _;\n    }\n\n    constructor(address _admin, address _manager, address _transferTo) {\n        if (_admin == address(0) || _manager == address(0) || _transferTo == address(0)) revert ZeroAddress();\n        admin = _admin;\n        manager = _manager;\n        transferTo = _transferTo;\n    }\n\n    function setAdmin(address newAdmin) external onlyAdmin {\n        if (newAdmin == address(0)) revert ZeroAddress();\n        emit AdminUpdated(admin, newAdmin);\n        admin = newAdmin;\n    }\n\n    function setManager(address newManager) external onlyAdmin {\n        if (newManager == address(0)) revert ZeroAddress();\n        emit ManagerUpdated(manager, newManager);\n        manager = newManager;\n    }\n\n    function setTransferTo(address newTransferTo) external onlyAdmin {\n        if (newTransferTo == address(0)) revert ZeroAddress();\n        emit TransferToUpdated(transferTo, newTransferTo);\n        transferTo = newTransferTo;\n    }\n\n    /// @notice Calls Circle MessageTransmitter.receiveMessage and forwards newly received tokens to transferTo.\n    /// @dev For forwarding to work, the CCTP message recipient on destination chain must be this contract.\n    function receiveMessageAndForward(\n        address messageTransmitter,\n        address token,\n        bytes calldata message,\n        bytes calldata attestation\n    ) external onlyManagerOrAdmin returns (uint256 forwardedAmount) {\n        uint256 beforeBal = IERC20(token).balanceOf(address(this));\n        bool ok = IMessageTransmitter(messageTransmitter).receiveMessage(message, attestation);\n        if (!ok) revert ReceiveMessageFailed();\n        uint256 afterBal = IERC20(token).balanceOf(address(this));\n\n        unchecked {\n            forwardedAmount = afterBal > beforeBal ? (afterBal - beforeBal) : 0;\n        }\n\n        if (forwardedAmount > 0) {\n            if (!IERC20(token).transfer(transferTo, forwardedAmount)) revert TokenTransferFailed();\n        }\n\n        emit MessageReceivedAndForwarded(msg.sender, messageTransmitter, token, forwardedAmount);\n    }\n\n    /// @notice Admin-only emergency token withdrawal.\n    function rescue_transfer(address token, address to, uint256 amount) external onlyAdmin {\n        if (to == address(0)) revert ZeroAddress();\n        if (!IERC20(token).transfer(to, amount)) revert TokenTransferFailed();\n        emit RescueTransfer(token, to, amount);\n    }\n}\n\n\n"
+    },
+    "contracts/mocks/MockERC20.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity 0.8.26;\n\ncontract MockERC20 {\n    string public name;\n    string public symbol;\n    uint8 public immutable decimals;\n\n    mapping(address => uint256) public balanceOf;\n\n    event Transfer(address indexed from, address indexed to, uint256 value);\n\n    constructor(string memory _name, string memory _symbol, uint8 _decimals) {\n        name = _name;\n        symbol = _symbol;\n        decimals = _decimals;\n    }\n\n    function mint(address to, uint256 amount) external {\n        balanceOf[to] += amount;\n        emit Transfer(address(0), to, amount);\n    }\n\n    function transfer(address to, uint256 amount) external returns (bool) {\n        uint256 fromBal = balanceOf[msg.sender];\n        require(fromBal >= amount, \"INSUFFICIENT_BALANCE\");\n        unchecked {\n            balanceOf[msg.sender] = fromBal - amount;\n        }\n        balanceOf[to] += amount;\n        emit Transfer(msg.sender, to, amount);\n        return true;\n    }\n}\n\n\n"
+    },
+    "contracts/mocks/MockMessageTransmitter.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity 0.8.26;\n\ninterface IMintable {\n    function mint(address to, uint256 amount) external;\n}\n\ncontract MockMessageTransmitter {\n    address public immutable token;\n    address public recipient;\n    uint256 public amountToMint;\n\n    constructor(address _token, address _recipient, uint256 _amountToMint) {\n        token = _token;\n        recipient = _recipient;\n        amountToMint = _amountToMint;\n    }\n\n    function setRecipient(address newRecipient) external {\n        recipient = newRecipient;\n    }\n\n    function setAmountToMint(uint256 newAmount) external {\n        amountToMint = newAmount;\n    }\n\n    // Mimics Circle MessageTransmitter interface.\n    function receiveMessage(bytes calldata, bytes calldata) external returns (bool) {\n        if (amountToMint > 0) {\n            IMintable(token).mint(recipient, amountToMint);\n        }\n        return true;\n    }\n}\n\n\n"
+    }
+  },
+  "settings": {
+    "viaIR": true,
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "metadata": {
+      "bytecodeHash": "none",
+      "useLiteralContent": true
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "storageLayout",
+          "devdoc",
+          "userdoc",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    }
+  }
+}

@@ -18,6 +18,8 @@
 
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { ethers, hexlify, ZeroHash } from "ethers";
+import * as fs from "fs";
+import * as path from "path";
 
 const APPROVE_EVM_ABI = [
   "function approve(address spender, uint256 amount) public returns (bool)",
@@ -30,12 +32,29 @@ const MESSAGE_TRANSMITTER_V2_EVM_ABI = [
   "function receiveMessage(bytes message, bytes attestation) public returns (bool)",
 ];
 
+const ETH_CCTP_RECEIVE_PROXY_ABI = [
+  "function receiveMessageAndForward(address messageTransmitter, address token, bytes message, bytes attestation) external returns (uint256)",
+];
+
 const destinationCaller = process.env.DESTINATION_CALLER ?? ZeroHash;
+
+const getRemotePrivateKey = (): string => {
+  if (process.env.REMOTE_EVM_PRIVATE_KEY) return process.env.REMOTE_EVM_PRIVATE_KEY;
+  try {
+    const p = path.resolve(__dirname, "../../ethereum_contracts/manager.json");
+    const raw = fs.readFileSync(p, "utf8");
+    const parsed = JSON.parse(raw);
+    if (!parsed?.privateKey) throw new Error("missing privateKey");
+    return parsed.privateKey;
+  } catch (e) {
+    throw new Error("REMOTE_EVM_PRIVATE_KEY is not set and ethereum_contracts/manager.json is not readable");
+  }
+};
 
 const getContracts = () => {
   const provider = new ethers.JsonRpcProvider(process.env.REMOTE_EVM_RPC_URL);
   const wallet = new ethers.Wallet(
-    process.env.REMOTE_EVM_PRIVATE_KEY,
+    getRemotePrivateKey(),
     provider
   );
   const usdcApproveContract = new ethers.Contract(
@@ -53,10 +72,16 @@ const getContracts = () => {
     MESSAGE_TRANSMITTER_V2_EVM_ABI,
     wallet
   );
+  const ethCctpReceiveProxyContract = new ethers.Contract(
+    process.env.REMOTE_EVM_ADDRESS,
+    ETH_CCTP_RECEIVE_PROXY_ABI,
+    wallet
+  );
   return {
     usdcApproveContract,
     tokenMessengerV2Contract,
     messageTransmitterV2Contract,
+    ethCctpReceiveProxyContract,
   };
 };
 
@@ -88,7 +113,7 @@ export const depositForBurnEvm = async (
   const depositForBurnTx = await tokenMessengerV2Contract.depositForBurn(
     amount,
     5, // Remote domain
-    hexlify(bs58.decode(process.env.USER_TOKEN_ACCOUNT)), // Solana token account
+    hexlify(Uint8Array.from(bs58.decode(process.env.USER_TOKEN_ACCOUNT))), // Solana token account
     process.env.REMOTE_TOKEN_HEX,
     destinationCaller,
     maxFee,
@@ -116,7 +141,7 @@ export const depositForBurnEvmWithHook = async (
   const depositForBurnTx = await tokenMessengerV2Contract.depositForBurnWithHook(
     amount,
     5, // Remote domain
-    hexlify(bs58.decode(process.env.USER_TOKEN_ACCOUNT)), // Solana token account
+    hexlify(Uint8Array.from(bs58.decode(process.env.USER_TOKEN_ACCOUNT))), // Solana token account
     process.env.REMOTE_TOKEN_HEX,
     destinationCaller,
     maxFee,
@@ -135,9 +160,22 @@ export const receiveMessageEvm = async (
   message: string,
   attestation: string
 ) => {
-  console.log("Receiving message on EVM...");
-  const { messageTransmitterV2Contract } = getContracts();
-  const receiveMessageTx = await messageTransmitterV2Contract.receiveMessage(
+  console.log("Receiving message on EVM via proxy...");
+  const { ethCctpReceiveProxyContract } = getContracts();
+
+  const provider = ethCctpReceiveProxyContract.runner?.provider as ethers.Provider | undefined;
+  const token = process.env.REMOTE_TOKEN_HEX;
+  if (!token) throw new Error("REMOTE_TOKEN_HEX is required");
+  if (provider) {
+    const code = await provider.getCode(token);
+    if (!code || code === "0x") {
+      throw new Error(`REMOTE_TOKEN_HEX has no code on this network: ${token}`);
+    }
+  }
+
+  const receiveMessageTx = await ethCctpReceiveProxyContract.receiveMessageAndForward(
+    process.env.REMOTE_EVM_MESSAGE_TRANSMITTER_ADDRESS,
+    token,
     message,
     attestation
   );

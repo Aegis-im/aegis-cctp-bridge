@@ -56,7 +56,7 @@ export ANCHOR_WALLET=./devnetUser.json
 export DEPOSIT_PROXY_V2_VAULT_ID=$(openssl rand -hex 32)
 
 # Deploy program
-cd ../programs/v2
+cd ../solana_programs/v2
 RUSTUP_TOOLCHAIN=nightly-2025-03-23 anchor build -p deposit_proxy_v2
 RUSTUP_TOOLCHAIN=nightly-2025-03-23 anchor deploy -p deposit_proxy_v2 --provider.cluster devnet
 cd ../../scripts
@@ -80,6 +80,14 @@ spl-token transfer -u devnet --owner $ANCHOR_WALLET 4zMMC9srt5Ri5X14GAgXhaHii3Gn
 # Bridge Solana -> EVM via DepositProxyV2 (run as manager)
 export ANCHOR_WALLET=$(pwd)/manager.json
 npm run bridge-v2-proxy sol2evm -- --amount 100 --maxFee 0 --minFinalityThreshold 2000
+```
+
+### Redeem only (EVM)
+If `sol2evm` burned on Solana but the EVM receive step failed (e.g. missing gas), you can re-run only the EVM receive
+using the Solana burn tx signature:
+
+```bash
+npm run redeem-evm -- --txHash <SOLANA_BURN_TX_SIG> --domainId 5
 ```
 
 ### Fast Transfer
@@ -146,3 +154,8 @@ For more info and scripts to help with calling depositForBurn on a different cha
     ```bash
     npm run receiveMessage
     ```
+
+Check valuts
+```bash
+npm run proxy-v2-admin list-vaults
+```

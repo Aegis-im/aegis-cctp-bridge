@@ -1,0 +1,26 @@
+{
+  "networks": {
+    "hardhat": {
+      "chainId": 1337
+    },
+    "mainnet": {
+      "chainId": 1,
+      "rpcUrl": "https://mainnet.gateway.tenderly.co",
+      "gasPrice": 77000000
+    },
+   "sepolia": {
+      "chainId": 11155111,
+      "rpcUrl": "https://ethereum-sepolia-rpc.publicnode.com",
+      "gasPrice": 30000000000
+    }
+  },
+  "common": {
+    "solidity": {
+      "version": "0.8.26",
+      "optimizer": {
+        "enabled": true,
+        "runs": 200
+      }
+    }
+  }
+}

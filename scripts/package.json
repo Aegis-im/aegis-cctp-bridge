@@ -5,6 +5,7 @@
   "scripts": {
     "depositForBurn": "tsx depositForBurn.ts",
     "receiveMessage": "tsx receiveMessage.ts",
+    "redeem-evm": "tsx redeemEvm.ts",
     "bridge-v2": "tsx bridgeV2.ts",
     "bridge-v2-proxy": "tsx bridgeV2Proxy.ts",
     "proxy-v2-admin": "tsx proxyV2Admin.ts"

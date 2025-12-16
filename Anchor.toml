@@ -20,13 +20,13 @@ cluster = "Localnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
-test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 programs/v2/tests/**/*tests.ts"
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 solana_programs/v2/tests/**/*tests.ts"
 
 [workspace]
 members = [
-    "programs/v2/message-transmitter-v2",
-    "programs/v2/token-messenger-minter-v2",
-    "programs/v2/deposit-proxy-v2",
+    "solana_programs/v2/message-transmitter-v2",
+    "solana_programs/v2/token-messenger-minter-v2",
+    "solana_programs/v2/deposit-proxy-v2",
 ]
 
 [toolchain]

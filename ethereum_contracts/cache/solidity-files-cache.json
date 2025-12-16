@@ -1,0 +1,143 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/home/ais/lab/projects/aegis/Aegis-im/aegis-cctp-bridge/ethereum_contracts/contracts/EthCctpReceiveProxy.sol": {
+      "lastModificationDate": 1765888550354,
+      "contentHash": "8ab3c48a96059a85826ad8f48373c85c",
+      "sourceName": "contracts/EthCctpReceiveProxy.sol",
+      "solcConfig": {
+        "version": "0.8.26",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout",
+                "devdoc",
+                "userdoc",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.26"
+      ],
+      "artifacts": [
+        "EthCctpReceiveProxy",
+        "IERC20",
+        "IMessageTransmitter"
+      ]
+    },
+    "/home/ais/lab/projects/aegis/Aegis-im/aegis-cctp-bridge/ethereum_contracts/contracts/mocks/MockERC20.sol": {
+      "lastModificationDate": 1765888657660,
+      "contentHash": "b0f34693f236a80d30ce75aa7d8d6863",
+      "sourceName": "contracts/mocks/MockERC20.sol",
+      "solcConfig": {
+        "version": "0.8.26",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout",
+                "devdoc",
+                "userdoc",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.26"
+      ],
+      "artifacts": [
+        "MockERC20"
+      ]
+    },
+    "/home/ais/lab/projects/aegis/Aegis-im/aegis-cctp-bridge/ethereum_contracts/contracts/mocks/MockMessageTransmitter.sol": {
+      "lastModificationDate": 1765888664126,
+      "contentHash": "949250da3ab7b8075322f948d9173142",
+      "sourceName": "contracts/mocks/MockMessageTransmitter.sol",
+      "solcConfig": {
+        "version": "0.8.26",
+        "settings": {
+          "viaIR": true,
+          "optimizer": {
+            "enabled": true,
+            "runs": 200
+          },
+          "metadata": {
+            "bytecodeHash": "none",
+            "useLiteralContent": true
+          },
+          "evmVersion": "paris",
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "storageLayout",
+                "devdoc",
+                "userdoc",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "0.8.26"
+      ],
+      "artifacts": [
+        "IMintable",
+        "MockMessageTransmitter"
+      ]
+    }
+  }
+}

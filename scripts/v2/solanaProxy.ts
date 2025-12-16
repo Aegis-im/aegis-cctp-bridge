@@ -8,8 +8,8 @@ import * as spl from "@solana/spl-token";
 import { Keypair, PublicKey, SystemProgram } from "@solana/web3.js";
 import { getBytes } from "ethers";
 
-import DEPOSIT_PROXY_V2_IDL from "../../programs/v2/target/idl/deposit_proxy_v2.json";
-import { DepositProxyV2 } from "../../programs/v2/target/types/deposit_proxy_v2";
+import DEPOSIT_PROXY_V2_IDL from "../../solana_programs/v2/target/idl/deposit_proxy_v2.json";
+import { DepositProxyV2 } from "../../solana_programs/v2/target/types/deposit_proxy_v2";
 import { evmAddressToBytes32, findProgramAddress, getAnchorConnection } from "../utils";
 import { getDepositForBurnPdasV2, getProgramsV2 } from "./utilsV2";
 

@@ -25,14 +25,14 @@ ANCHOR_VERSION=0.31.0
 BASE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 function clean() (
-  pushd "${BASE_PATH}"/programs/v2
+  pushd "${BASE_PATH}"/solana_programs/v2
   RUSTUP_TOOLCHAIN=$RUST_VERSION anchor clean
   echo "V2 program build artifacts cleaned"
   popd
 )
 
 function build() (
-  pushd "${BASE_PATH}"/programs/v2
+  pushd "${BASE_PATH}"/solana_programs/v2
   RUSTUP_TOOLCHAIN=$RUST_VERSION anchor build -p message_transmitter_v2
   RUSTUP_TOOLCHAIN=$RUST_VERSION anchor build -p token_messenger_minter_v2
   RUSTUP_TOOLCHAIN=$RUST_VERSION anchor build -p deposit_proxy_v2
@@ -41,7 +41,7 @@ function build() (
 
 function test() (
   yarn install
-  pushd "${BASE_PATH}"/programs/v2
+  pushd "${BASE_PATH}"/solana_programs/v2
   yarn install
   RUSTUP_TOOLCHAIN=$RUST_VERSION anchor test -- --features test
   popd
@@ -53,7 +53,7 @@ function setup() {
   install_avm $ANCHOR_VERSION
   create_key_pair
   yarn install
-  (pushd "${BASE_PATH}"/programs/v2 && yarn install && popd)
+  (pushd "${BASE_PATH}"/solana_programs/v2 && yarn install && popd)
 }
 
 function create_key_pair() {
