@@ -152,10 +152,56 @@ For more info and scripts to help with calling depositForBurn on a different cha
 4. Call receiveMessage script:
 
     ```bash
-    npm run receiveMessage
+MESSAGE_HEX=... \
+ATTESTATION_HEX=... \
+npm run receiveMessage
     ```
 
 Check valuts
 ```bash
 npm run proxy-v2-admin list-vaults
+```
+
+### Cron (auto bridge from vault)
+
+Crontab example (append logs):
+
+```cron
+* * * * * cd /home/ais/lab/projects/aegis/Aegis-im/aegis-cctp-bridge/scripts && /usr/bin/env npm run -s cron-bridge-v2-proxy >> /home/ais/lab/projects/aegis/Aegis-im/aegis-cctp-bridge/scripts/cron-bridge.log 2>&1
+```
+
+Log file size limit: use `logrotate` (example: rotate when log > 50MB, keep 10 files):
+
+```conf
+/var/log/aegis-cctp/cron-bridge.log {
+  size 50M
+  rotate 10
+  compress
+  missingok
+  notifempty
+  copytruncate
+}
+```
+
+Install (example):
+
+```bash
+sudo mkdir -p /var/log/aegis-cctp
+sudo tee /etc/logrotate.d/aegis-cctp-bridge >/dev/null <<'EOF'
+/var/log/aegis-cctp/cron-bridge.log {
+  size 50M
+  rotate 10
+  compress
+  missingok
+  notifempty
+  copytruncate
+}
+EOF
+```
+
+Test:
+
+```bash
+sudo logrotate -d /etc/logrotate.d/aegis-cctp-bridge
+sudo logrotate -f /etc/logrotate.d/aegis-cctp-bridge
 ```

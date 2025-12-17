@@ -1,10 +1,69 @@
 use anchor_lang::prelude::*;
+use anchor_lang::solana_program::bpf_loader_upgradeable;
+use anchor_lang::solana_program::bpf_loader_upgradeable::UpgradeableLoaderState;
+use bincode::deserialize;
 use anchor_spl::{
     associated_token::{get_associated_token_address, AssociatedToken},
     token::{self, Mint, Token, TokenAccount, Transfer},
 };
 
 declare_id!("XuwZZ9M3dibJAPpz4g4T1rYsiGdfYxcPxPngJaL4XEX");
+
+fn require_program_upgrade_authority(
+    program: &AccountInfo,
+    program_data: &AccountInfo,
+    expected_authority: &Pubkey,
+) -> Result<()> {
+    require_keys_eq!(program.key(), crate::ID, DepositProxyV2Error::Unauthorized);
+    require!(program.executable, DepositProxyV2Error::Unauthorized);
+    require_keys_eq!(
+        *program.owner,
+        bpf_loader_upgradeable::ID,
+        DepositProxyV2Error::Unauthorized
+    );
+    require_keys_eq!(
+        *program_data.owner,
+        bpf_loader_upgradeable::ID,
+        DepositProxyV2Error::Unauthorized
+    );
+
+    let programdata_address = {
+        let data = program.try_borrow_data()?;
+        match deserialize::<UpgradeableLoaderState>(&data)
+            .map_err(|_| error!(DepositProxyV2Error::Unauthorized))?
+        {
+            UpgradeableLoaderState::Program {
+                programdata_address,
+            } => programdata_address,
+            _ => return err!(DepositProxyV2Error::Unauthorized),
+        }
+    };
+
+    require_keys_eq!(
+        programdata_address,
+        program_data.key(),
+        DepositProxyV2Error::Unauthorized
+    );
+
+    let upgrade_authority_address = {
+        let data = program_data.try_borrow_data()?;
+        match deserialize::<UpgradeableLoaderState>(&data)
+            .map_err(|_| error!(DepositProxyV2Error::Unauthorized))?
+        {
+            UpgradeableLoaderState::ProgramData {
+                upgrade_authority_address,
+                ..
+            } => upgrade_authority_address,
+            _ => return err!(DepositProxyV2Error::Unauthorized),
+        }
+    };
+
+    require!(
+        upgrade_authority_address == Some(*expected_authority),
+        DepositProxyV2Error::Unauthorized
+    );
+    Ok(())
+}
 
 #[program]
 pub mod deposit_proxy_v2 {
@@ -22,6 +81,12 @@ pub mod deposit_proxy_v2 {
             Pubkey::default(),
             DepositProxyV2Error::InvalidMintRecipient
         );
+
+        require_program_upgrade_authority(
+            &ctx.accounts.program.to_account_info(),
+            &ctx.accounts.program_data.to_account_info(),
+            &ctx.accounts.payer.key(),
+        )?;
 
         let vault = &mut ctx.accounts.vault;
         vault.bump = ctx.bumps.vault;
@@ -242,6 +307,16 @@ fn burn_for_deposit_impl(
 pub struct InitializeVault<'info> {
     #[account(mut)]
     pub payer: Signer<'info>,
+
+    /// CHECK: deposit_proxy_v2 program account (upgrade authority check).
+    #[account(
+        constraint = program.key() == crate::ID @ DepositProxyV2Error::Unauthorized,
+        constraint = program.executable @ DepositProxyV2Error::Unauthorized,
+    )]
+    pub program: UncheckedAccount<'info>,
+
+    /// CHECK: BPFUpgradeableLoader program data account (upgrade authority check).
+    pub program_data: UncheckedAccount<'info>,
 
     #[account(
         init,

@@ -22,6 +22,7 @@ default = []
 anchor-lang = { version = "=0.31.0" }
 anchor-spl = "=0.31.0"
 solana-security-txt = "=1.1.1"
+bincode = "1.3.3"
 
 # CPI targets
 message-transmitter-v2 = { path = "../message-transmitter-v2", features = ["no-entrypoint", "cpi"] }

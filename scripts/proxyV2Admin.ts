@@ -39,6 +39,8 @@ const getDepositProxyProgram = (provider: anchor.AnchorProvider) => {
   );
 };
 
+const BPF_UPGRADEABLE_LOADER_ID = new PublicKey("BPFLoaderUpgradeab1e11111111111111111111111");
+
 const main = async () => {
   const command = process.argv.slice(2)[0] as Command;
   const raw = minimist(process.argv.slice(3), {
@@ -136,6 +138,11 @@ const main = async () => {
 
     const vaultTokenAccount = await spl.getAssociatedTokenAddress(usdcMint, vaultAuthority, true);
 
+    const [programData] = PublicKey.findProgramAddressSync(
+      [depositProxyProgram.programId.toBuffer()],
+      BPF_UPGRADEABLE_LOADER_ID
+    );
+
     const sig = await depositProxyProgram.methods
       .initializeVault(
         Array.from(vaultId),
@@ -145,6 +152,8 @@ const main = async () => {
       )
       .accountsPartial({
         payer: provider.wallet.publicKey,
+        program: depositProxyProgram.programId,
+        programData,
         vault: vaultPda,
         vaultAuthority,
         burnTokenMint: usdcMint,
