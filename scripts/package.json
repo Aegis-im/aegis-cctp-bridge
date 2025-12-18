@@ -8,7 +8,7 @@
     "redeem-evm": "tsx redeemEvm.ts",
     "bridge-v2": "tsx bridgeV2.ts",
     "bridge-v2-proxy": "tsx bridgeV2Proxy.ts",
-    "cron-bridge-v2-proxy": "tsx cronBridgeV2Proxy.ts",
+    "daemon-bridge-v2-proxy": "tsx daemonBridgeV2Proxy.ts",
     "proxy-v2-admin": "tsx proxyV2Admin.ts"
   },
   "dependencies": {
