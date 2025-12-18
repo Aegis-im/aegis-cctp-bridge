@@ -9,6 +9,8 @@
     "bridge-v2": "tsx bridgeV2.ts",
     "bridge-v2-proxy": "tsx bridgeV2Proxy.ts",
     "daemon-bridge-v2-proxy": "tsx daemonBridgeV2Proxy.ts",
+    "build-daemon": "esbuild daemonBridgeV2Proxy.ts --bundle --platform=node --target=node20 --minify --outfile=dist/daemonBridgeV2Proxy.js",
+    "start-daemon": "node dist/daemonBridgeV2Proxy.js",
     "proxy-v2-admin": "tsx proxyV2Admin.ts"
   },
   "dependencies": {
@@ -19,6 +21,9 @@
     "ethers": "^6.11.1",
     "tsx": "^4.19.4",
     "zx": "^8.5.3"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
   },
   "overrides": {
     "ws": "^7.5.10",

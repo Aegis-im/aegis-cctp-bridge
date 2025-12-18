@@ -18,7 +18,7 @@
 
 import * as anchor from "@coral-xyz/anchor";
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
-import { PublicKey } from "@solana/web3.js";
+import { Keypair, PublicKey } from "@solana/web3.js";
 import "dotenv/config";
 import { hexlify } from "ethers";
 import fetch from "node-fetch";
@@ -39,10 +39,50 @@ export interface FindProgramAddressResponse {
   bump: number;
 }
 
+const loadSolanaKeypairFromEnv = (): Keypair | null => {
+  const jsonRaw = (process.env.SOLANA_KEYPAIR_JSON ?? "").trim();
+  const b64Raw = (process.env.SOLANA_KEYPAIR_B64 ?? "").trim();
+
+  const decodeJsonToSecret = (raw: string): Uint8Array => {
+    const parsed = JSON.parse(raw);
+    const arr = Array.isArray(parsed)
+      ? parsed
+      : Array.isArray(parsed?.secretKey)
+        ? parsed.secretKey
+        : null;
+    if (!arr) throw new Error("Invalid SOLANA_KEYPAIR_* format");
+    return Uint8Array.from(arr);
+  };
+
+  if (jsonRaw) {
+    return Keypair.fromSecretKey(decodeJsonToSecret(jsonRaw));
+  }
+  if (b64Raw) {
+    const decoded = Buffer.from(b64Raw, "base64").toString("utf8");
+    return Keypair.fromSecretKey(decodeJsonToSecret(decoded));
+  }
+  return null;
+};
+
 // Configure client to use the provider and return it.
-// Must set ANCHOR_WALLET (solana keypair path) and ANCHOR_PROVIDER_URL (node URL) env vars
+// Preferred: SOLANA_KEYPAIR_JSON/SOLANA_KEYPAIR_B64 + ANCHOR_PROVIDER_URL
+// Fallback: Anchor defaults (ANCHOR_WALLET file path + ANCHOR_PROVIDER_URL)
 export const getAnchorConnection = () => {
-  const provider = anchor.AnchorProvider.env();
+  const kp = loadSolanaKeypairFromEnv();
+  const provider = kp
+    ? new anchor.AnchorProvider(
+        new anchor.web3.Connection(
+          (() => {
+            const url = (process.env.ANCHOR_PROVIDER_URL ?? "").trim();
+            if (!url) throw new Error("ANCHOR_PROVIDER_URL is required");
+            return url;
+          })(),
+          anchor.AnchorProvider.defaultOptions().commitment
+        ),
+        new anchor.Wallet(kp),
+        anchor.AnchorProvider.defaultOptions()
+      )
+    : anchor.AnchorProvider.env();
   anchor.setProvider(provider);
   return provider;
 };
@@ -181,7 +221,7 @@ export const getReceiveMessagePdas = async (
 };
 
 export const solanaAddressToHex = (solanaAddress: string): string =>
-  hexlify(bs58.decode(solanaAddress));
+  hexlify(Uint8Array.from(bs58.decode(solanaAddress)));
 
 export const evmAddressToSolana = (evmAddress: string): string =>
   bs58.encode(hexToBytes(evmAddress));
@@ -250,6 +290,6 @@ export const decodeEventNonceFromMessage = (messageHex: string): string => {
     nonceIndex,
     nonceIndex + nonceBytesLength
   );
-  const eventNonceHex = hexlify(eventNonceBytes);
+  const eventNonceHex = hexlify(Uint8Array.from(eventNonceBytes));
   return BigInt(eventNonceHex).toString();
 };

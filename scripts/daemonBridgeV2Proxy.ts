@@ -15,7 +15,9 @@ import { DepositProxyV2 } from "../solana_programs/v2/target/types/deposit_proxy
 import { sol2evm } from "./bridgeV2Proxy.utils";
 import { findProgramAddress, getAnchorConnection } from "./utils";
 
-dotenv.config({ path: path.resolve(__dirname, ".env") });
+dotenv.config({
+  path: (process.env.DOTENV_CONFIG_PATH ?? path.resolve(__dirname, "../.env")).trim(),
+});
 
 const DEFAULT_SOLANA_USDC_ADDRESS = "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU";
 

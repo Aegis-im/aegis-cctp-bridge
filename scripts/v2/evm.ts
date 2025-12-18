@@ -18,8 +18,6 @@
 
 import { bs58 } from "@coral-xyz/anchor/dist/cjs/utils/bytes";
 import { ethers, hexlify, ZeroHash } from "ethers";
-import * as fs from "fs";
-import * as path from "path";
 
 const APPROVE_EVM_ABI = [
   "function approve(address spender, uint256 amount) public returns (bool)",
@@ -40,15 +38,7 @@ const destinationCaller = process.env.DESTINATION_CALLER ?? ZeroHash;
 
 const getRemotePrivateKey = (): string => {
   if (process.env.REMOTE_EVM_PRIVATE_KEY) return process.env.REMOTE_EVM_PRIVATE_KEY;
-  try {
-    const p = path.resolve(__dirname, "../../ethereum_contracts/manager.json");
-    const raw = fs.readFileSync(p, "utf8");
-    const parsed = JSON.parse(raw);
-    if (!parsed?.privateKey) throw new Error("missing privateKey");
-    return parsed.privateKey;
-  } catch (e) {
-    throw new Error("REMOTE_EVM_PRIVATE_KEY is not set and ethereum_contracts/manager.json is not readable");
-  }
+  throw new Error("REMOTE_EVM_PRIVATE_KEY is required");
 };
 
 const getContracts = () => {
