@@ -20,13 +20,9 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install Solana CLI
-        run: |
-          for i in 1 2 3; do
-            curl --retry 3 --retry-delay 2 -sSfL https://release.solana.com/v2.1.0/install | sh -s - --version 2.1.0 && break || sleep 5
-          done
-          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-          solana --version
+        uses: hanchon/setup-solana@v1
+        with:
+          solana-version: "2.1.0"
 
       - name: Install Anchor CLI
         run: |
