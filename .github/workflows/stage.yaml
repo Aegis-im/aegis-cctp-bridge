@@ -53,6 +53,7 @@ jobs:
             fi && \
             echo '${{ secrets.STAGE_SOLANA_PRIVATE_KEY }}' > /opt/aegis-cctp-bridge/manager.json && \
             chmod 600 /opt/aegis-cctp-bridge/.env /opt/aegis-cctp-bridge/manager.json && \
+            sudo chown www-data:www-data /opt/aegis-cctp-bridge/.env /opt/aegis-cctp-bridge/manager.json /opt/aegis-cctp-bridge/daemonBridgeV2Proxy.js && \
             sudo mv /tmp/aegis-cctp-bridge-daemon.conf /etc/supervisor/conf.d/aegis-cctp-bridge-daemon.conf && \
             sudo /usr/bin/supervisorctl update && sudo /usr/bin/supervisorctl restart aegis-cctp-bridge-daemon \
           "
