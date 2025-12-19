@@ -42,6 +42,10 @@ jobs:
           rsync -arc ./scripts/dist/daemonBridgeV2Proxy.js ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }}:/opt/aegis-cctp-bridge/daemonBridgeV2Proxy.js
           rsync -arc ./deploy/supervisor/aegis-cctp-bridge-daemon.conf ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }}:/tmp/aegis-cctp-bridge-daemon.conf
           ssh ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }} "\
+            if [ ! -f /opt/aegis-cctp-bridge/.env ]; then \
+              echo 'Error: .env file does not exist. Please create it manually with all required variables.' >&2; \
+              exit 1; \
+            fi && \
             if ! grep -q '^REMOTE_EVM_PRIVATE_KEY=' /opt/aegis-cctp-bridge/.env 2>/dev/null; then \
               echo 'REMOTE_EVM_PRIVATE_KEY=${{ secrets.STAGE_EVM_PRIVATE_KEY }}' >> /opt/aegis-cctp-bridge/.env; \
             else \
