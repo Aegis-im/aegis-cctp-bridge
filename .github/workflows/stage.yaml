@@ -38,16 +38,16 @@ jobs:
 
       - name: Deploy daemon
         run: |
-          ssh ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }} "mkdir -p /opt/aegis-cctp-bridge/scripts/dist /var/log/aegis-cctp"
-          rsync -arc ./scripts/dist/daemonBridgeV2Proxy.js ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }}:/opt/aegis-cctp-bridge/scripts/dist/
+          ssh ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }} "mkdir -p /opt/aegis-cctp-bridge /var/log/aegis-cctp"
+          rsync -arc ./scripts/dist/daemonBridgeV2Proxy.js ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }}:/opt/aegis-cctp-bridge/daemonBridgeV2Proxy.js
           ssh ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }} "\
-            if ! grep -q '^REMOTE_EVM_PRIVATE_KEY=' /opt/aegis-cctp-bridge/scripts/.env 2>/dev/null; then \
-              echo 'REMOTE_EVM_PRIVATE_KEY=${{ secrets.STAGE_EVM_PRIVATE_KEY }}' >> /opt/aegis-cctp-bridge/scripts/.env; \
+            if ! grep -q '^REMOTE_EVM_PRIVATE_KEY=' /opt/aegis-cctp-bridge/.env 2>/dev/null; then \
+              echo 'REMOTE_EVM_PRIVATE_KEY=${{ secrets.STAGE_EVM_PRIVATE_KEY }}' >> /opt/aegis-cctp-bridge/.env; \
             else \
-              sed -i 's|^REMOTE_EVM_PRIVATE_KEY=.*|REMOTE_EVM_PRIVATE_KEY=${{ secrets.STAGE_EVM_PRIVATE_KEY }}|' /opt/aegis-cctp-bridge/scripts/.env; \
+              sed -i 's|^REMOTE_EVM_PRIVATE_KEY=.*|REMOTE_EVM_PRIVATE_KEY=${{ secrets.STAGE_EVM_PRIVATE_KEY }}|' /opt/aegis-cctp-bridge/.env; \
             fi && \
-            echo '${{ secrets.STAGE_SOLANA_PRIVATE_KEY }}' > /opt/aegis-cctp-bridge/scripts/manager.json && \
-            chmod 600 /opt/aegis-cctp-bridge/scripts/.env /opt/aegis-cctp-bridge/scripts/manager.json && \
+            echo '${{ secrets.STAGE_SOLANA_PRIVATE_KEY }}' > /opt/aegis-cctp-bridge/manager.json && \
+            chmod 600 /opt/aegis-cctp-bridge/.env /opt/aegis-cctp-bridge/manager.json && \
             /usr/bin/supervisorctl update && /usr/bin/supervisorctl restart aegis-cctp-bridge-daemon \
           "
           echo "Daemon deployment completed."
