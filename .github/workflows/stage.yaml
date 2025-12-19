@@ -48,6 +48,6 @@ jobs:
             fi && \
             echo '${{ secrets.STAGE_SOLANA_PRIVATE_KEY }}' > /opt/aegis-cctp-bridge/manager.json && \
             chmod 600 /opt/aegis-cctp-bridge/.env /opt/aegis-cctp-bridge/manager.json && \
-            /usr/bin/supervisorctl update && /usr/bin/supervisorctl restart aegis-cctp-bridge-daemon \
+            sudo /usr/bin/supervisorctl update && sudo /usr/bin/supervisorctl restart aegis-cctp-bridge-daemon \
           "
           echo "Daemon deployment completed."
