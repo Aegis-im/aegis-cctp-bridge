@@ -16,32 +16,9 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install Solana CLI
-        uses: hanchon/setup-solana@v1
-        with:
-          solana-version: "2.1.0"
-
-      - name: Install Anchor CLI
+      - name: Create IDL directories
         run: |
-          cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
-          avm install 0.31.0
-          avm use 0.31.0
-          anchor --version
-
-      - name: Build Solana programs
-        working-directory: solana_programs/v2
-        run: anchor build
-
-      - name: Copy IDL files
-        run: |
-          mkdir -p scripts/target/idl scripts/v2/../target/idl
-          cp solana_programs/v2/target/idl/message_transmitter_v2.json scripts/target/idl/ 2>/dev/null || true
-          cp solana_programs/v2/target/idl/token_messenger_minter_v2.json scripts/target/idl/ 2>/dev/null || true
-          cp solana_programs/v2/target/idl/message_transmitter_v2.json scripts/v2/../target/idl/ 2>/dev/null || true
-          cp solana_programs/v2/target/idl/token_messenger_minter_v2.json scripts/v2/../target/idl/ 2>/dev/null || true
+          mkdir -p scripts/target/idl scripts/v2/../target/idl solana_programs/v2/target/idl
           # Create placeholder files for old IDLs if they don't exist
           if [ ! -f scripts/target/idl/message_transmitter_031.json ]; then
             echo '{"version":"0.1.0","name":"message_transmitter_031","instructions":[]}' > scripts/target/idl/message_transmitter_031.json
