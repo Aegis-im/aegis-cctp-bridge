@@ -40,6 +40,7 @@ jobs:
         run: |
           ssh ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }} "mkdir -p /opt/aegis-cctp-bridge /var/log/aegis-cctp"
           rsync -arc ./scripts/dist/daemonBridgeV2Proxy.js ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }}:/opt/aegis-cctp-bridge/daemonBridgeV2Proxy.js
+          rsync -arc ./deploy/supervisor/aegis-cctp-bridge-daemon.conf ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }}:/tmp/aegis-cctp-bridge-daemon.conf
           ssh ${{ secrets.STAGE_SSH_DAEMON_USERNAME }}@${{ secrets.STAGE_SSH_DAEMON_HOST }} "\
             if ! grep -q '^REMOTE_EVM_PRIVATE_KEY=' /opt/aegis-cctp-bridge/.env 2>/dev/null; then \
               echo 'REMOTE_EVM_PRIVATE_KEY=${{ secrets.STAGE_EVM_PRIVATE_KEY }}' >> /opt/aegis-cctp-bridge/.env; \
@@ -48,6 +49,7 @@ jobs:
             fi && \
             echo '${{ secrets.STAGE_SOLANA_PRIVATE_KEY }}' > /opt/aegis-cctp-bridge/manager.json && \
             chmod 600 /opt/aegis-cctp-bridge/.env /opt/aegis-cctp-bridge/manager.json && \
+            sudo mv /tmp/aegis-cctp-bridge-daemon.conf /etc/supervisor/conf.d/aegis-cctp-bridge-daemon.conf && \
             sudo /usr/bin/supervisorctl update && sudo /usr/bin/supervisorctl restart aegis-cctp-bridge-daemon \
           "
           echo "Daemon deployment completed."
