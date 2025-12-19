@@ -16,16 +16,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Create IDL directories
-        run: |
-          mkdir -p scripts/target/idl scripts/v2/../target/idl solana_programs/v2/target/idl
-          # Create placeholder files for old IDLs if they don't exist
-          if [ ! -f scripts/target/idl/message_transmitter_031.json ]; then
-            echo '{"version":"0.1.0","name":"message_transmitter_031","instructions":[]}' > scripts/target/idl/message_transmitter_031.json
-          fi
-          if [ ! -f scripts/target/idl/token_messenger_minter_031.json ]; then
-            echo '{"version":"0.1.0","name":"token_messenger_minter_031","instructions":[]}' > scripts/target/idl/token_messenger_minter_031.json
-          fi
 
       - name: Install scripts deps
         working-directory: scripts

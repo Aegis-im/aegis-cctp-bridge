@@ -3,6 +3,7 @@
 .DS_Store
 target
 !examples/target
+!**/target/idl/*.json
 **/*.rs.bk
 node_modules
 test-ledger
