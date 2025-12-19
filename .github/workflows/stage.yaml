@@ -19,6 +19,12 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install Solana CLI
+        run: |
+          sh -c "$(curl -sSfL https://release.solana.com/v2.1.0/install)"
+          echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+          solana --version
+
       - name: Install Anchor CLI
         run: |
           cargo install --git https://github.com/coral-xyz/anchor avm --locked --force
